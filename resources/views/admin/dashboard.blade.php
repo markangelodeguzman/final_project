@@ -2,98 +2,114 @@
 
 @section('content')
 
-<div class="page-header">
-    <h2 class="page-title">Admin Console</h2>
-    <p class="text-muted">System configuration and user management.</p>
-</div>
+<h2 class="mb-4 pb-2 border-bottom">System Administrator</h2>
 
-<div class="row g-4">
-    <!-- LEFT COLUMN: System Settings -->
+<div class="row">
+    <!-- LEFT: Settings -->
     <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">⚙️ System Parameters</div>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">System Parameters</div>
             <div class="card-body">
                 <form action="{{ route('admin.settings') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase fw-bold">Loan Duration (Days)</label>
+                        <label class="form-label">Loan Duration (Days)</label>
                         <input type="number" name="loan_duration_days" class="form-control" value="{{ $settings['loan_duration_days'] }}">
-                        <div class="form-text">Default days allowed for borrowing.</div>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label text-muted small text-uppercase fw-bold">Penalty Per Day (PHP)</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0">₱</span>
-                            <input type="number" step="0.01" name="penalty_per_day" class="form-control border-start-0" value="{{ $settings['penalty_per_day'] }}">
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Penalty Per Day (Amount)</label>
+                        <input type="number" step="0.01" name="penalty_per_day" class="form-control" value="{{ $settings['penalty_per_day'] }}">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Update Parameters</button>
+                    <button type="submit" class="btn btn-primary w-100">Update Settings</button>
                 </form>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header text-danger">⚠️ Danger Zone</div>
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">Maintenance</div>
             <div class="card-body">
-                <p class="small text-muted mb-3">Remove pending requests that have been inactive for > 30 days.</p>
-                <a href="{{ route('admin.cleanup') }}" class="btn btn-outline-danger btn-sm w-100">Run System Cleanup</a>
+                <p class="card-text small">Delete pending requests older than 30 days.</p>
+                <a href="{{ route('admin.cleanup') }}" class="btn btn-outline-danger w-100">Run Cleanup</a>
             </div>
         </div>
     </div>
 
-    <!-- RIGHT COLUMN: User Management -->
+    <!-- RIGHT: Management -->
     <div class="col-md-8">
-        <!-- Add Patron -->
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Manage Patrons</span>
-                <span class="badge bg-secondary">{{ count($patrons) }} Total</span>
-            </div>
+        <!-- Patrons -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light fw-bold">Manage Patrons</div>
             <div class="card-body">
-                <form action="{{ route('admin.patron.store') }}" method="POST" class="row g-2 mb-4">
+                <form action="{{ route('admin.patron.store') }}" method="POST" class="row g-2 mb-3">
                     @csrf
-                    <div class="col-md-3"><input type="text" name="first_name" class="form-control form-control-sm" placeholder="First Name" required></div>
-                    <div class="col-md-3"><input type="text" name="last_name" class="form-control form-control-sm" placeholder="Last Name" required></div>
-                    <div class="col-md-4"><input type="email" name="email" class="form-control form-control-sm" placeholder="Email Address"></div>
-                    <div class="col-md-2"><button class="btn btn-success btn-sm w-100">Add New</button></div>
+                    <div class="col-md-3">
+                        <input type="text" name="first_name" class="form-control form-control-sm" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="last_name" class="form-control form-control-sm" placeholder="Last Name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="email" name="email" class="form-control form-control-sm" placeholder="Email">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success btn-sm w-100">Add</button>
+                    </div>
                 </form>
 
-                <div class="table-responsive" style="max-height: 250px;">
-                    <table class="table table-sm table-hover border-top">
-                        <thead class="bg-light"><tr><th>ID</th><th>Name</th><th>Email</th><th class="text-end">Action</th></tr></thead>
-                        <tbody>
-                            @foreach($patrons as $p)
-                            <tr>
-                                <td class="text-muted">#{{ $p->patron_id }}</td>
-                                <td class="fw-bold">{{ $p->first_name }} {{ $p->last_name }}</td>
-                                <td class="text-muted">{{ $p->email }}</td>
-                                <td class="text-end"><a href="{{ route('admin.patron.delete', $p->patron_id) }}" class="text-danger small text-decoration-none">Remove</a></td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($patrons as $p)
+                        <tr>
+                            <td>{{ $p->patron_id }}</td>
+                            <td>{{ $p->first_name }} {{ $p->last_name }}</td>
+                            <td>{{ $p->email }}</td>
+                            <td><a href="{{ route('admin.patron.delete', $p->patron_id) }}" class="btn btn-danger btn-sm py-0">Delete</a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Add Librarian -->
-        <div class="card">
-            <div class="card-header">Manage Librarians</div>
+        <!-- Librarians -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-light fw-bold">Manage Librarians</div>
             <div class="card-body">
                 <form action="{{ route('admin.librarian.store') }}" method="POST" class="row g-2 mb-3">
                     @csrf
-                    <div class="col-md-4"><input type="text" name="first_name" class="form-control form-control-sm" placeholder="First Name" required></div>
-                    <div class="col-md-4"><input type="text" name="last_name" class="form-control form-control-sm" placeholder="Last Name" required></div>
-                    <div class="col-md-4"><button class="btn btn-primary btn-sm w-100">Add Staff</button></div>
+                    <div class="col-md-4">
+                        <input type="text" name="first_name" class="form-control form-control-sm" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="last_name" class="form-control form-control-sm" placeholder="Last Name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary btn-sm w-100">Add Librarian</button>
+                    </div>
                 </form>
-                
-                <table class="table table-sm border-top">
+
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         @foreach($librarians as $l)
                         <tr>
-                            <td class="text-muted">#{{ $l->librarian_id }}</td>
-                            <td class="fw-bold">{{ $l->first_name }} {{ $l->last_name }}</td>
-                            <td class="text-end"><a href="{{ route('admin.librarian.delete', $l->librarian_id) }}" class="text-danger small text-decoration-none">Remove</a></td>
+                            <td>{{ $l->librarian_id }}</td>
+                            <td>{{ $l->first_name }} {{ $l->last_name }}</td>
+                            <td><a href="{{ route('admin.librarian.delete', $l->librarian_id) }}" class="btn btn-danger btn-sm py-0">Delete</a></td>
                         </tr>
                         @endforeach
                     </tbody>
