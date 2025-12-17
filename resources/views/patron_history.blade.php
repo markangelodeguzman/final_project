@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <h2>My Account & History</h2>
         <div class="card p-4 mb-4 bg-light">
-            <!-- Form to select which Patron you are (Simulating Login) -->
+            <!-- Form to select which Patron you are -->
             <form action="{{ route('patron.history') }}" method="GET" class="d-flex align-items-center">
                 <label class="me-3 fw-bold">Select Your Name:</label>
                 <select name="patron_id" class="form-select w-50 me-2" required>
@@ -42,7 +42,7 @@
                     <td>{{ $borrow->borrow_date }}</td>
                     <td>
                         {{ $borrow->due_date }}
-                        <!-- Business Rule: Flag overdue books automatically -->
+                        <!-- Flag overdue books automatically -->
                         @if(\Carbon\Carbon::now()->gt($borrow->due_date) && $borrow->status == 'active')
                             <span class="badge bg-danger">OVERDUE</span>
                         @endif
@@ -57,7 +57,7 @@
                         @endif
                     </td>
                     <td>
-                        <!-- Business Rule: Patron can update requests (Extend) if allowed -->
+                        <!-- Patron can update requests (Extend) if allowed -->
                         @if($borrow->status == 'active')
                             <form action="{{ route('borrow.extend', $borrow->borrow_id) }}" method="POST" class="d-inline">
                                 @csrf

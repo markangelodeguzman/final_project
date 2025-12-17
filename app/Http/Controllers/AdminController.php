@@ -16,13 +16,13 @@ class AdminController extends Controller
         $patrons = Patron::all();
         $librarians = Librarian::all();
         
-        // Fetch settings as an associative array for easy access
+        
         $settings = SystemSetting::all()->pluck('setting_value', 'setting_key');
         
         return view('admin.dashboard', compact('patrons', 'librarians', 'settings'));
     }
 
-    // 2. UPDATE SYSTEM PARAMETERS (Business Rule: Admin updates parameters)
+    // 2. UPDATE SYSTEM PARAMETERS
     public function updateSettings(Request $request)
     {
         foreach ($request->except('_token') as $key => $value) {
@@ -31,7 +31,7 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'System parameters updated successfully.');
     }
 
-    // 3. MANAGE PATRONS (Business Rule: Admin manages accounts)
+    // 3. MANAGE PATRONS
     public function storePatron(Request $request)
     {
         Patron::create($request->all());
@@ -57,7 +57,7 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Librarian account deleted.');
     }
 
-    // 5. DELETE INVALID RECORDS (Business Rule: Delete duplicate/invalid records)
+    // 5. DELETE INVALID RECORDS
     public function cleanupRecords()
     {
         // Example: Delete 'pending' requests older than 30 days (stale data)

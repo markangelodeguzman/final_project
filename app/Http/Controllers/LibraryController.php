@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 class LibraryController extends Controller
 {
-    // ================= PATRON FEATURES =================
+    // PATRON FEATURES
 
     public function index()
     {
@@ -74,14 +74,14 @@ class LibraryController extends Controller
             return back()->with('warning', 'Cannot extend overdue books. Please return and pay penalty.');
         }
 
-        // Extend by 7 days (or could make this dynamic too)
+        // Extend by 7 days
         $borrow->due_date = Carbon::parse($borrow->due_date)->addDays(7);
         $borrow->save();
 
         return back()->with('success', 'Due date extended by 7 days.');
     }
 
-    // ================= LIBRARIAN FEATURES =================
+    // LIBRARIAN FEATURES
 
     public function adminDashboard(Request $request)
     {
@@ -110,7 +110,7 @@ class LibraryController extends Controller
     {
         $borrow = Borrow::find($borrow_id);
         
-        // GET DYNAMIC SETTING: Loan Duration (Default to 7 if missing)
+        // GET DYNAMIC SETTING: Loan Duration
         $duration = SystemSetting::where('setting_key', 'loan_duration_days')->value('setting_value') ?? 7;
 
         $borrow->status = 'active';
@@ -174,7 +174,7 @@ class LibraryController extends Controller
         return redirect('/librarian')->with('success', 'Book returned successfully.');
     }
 
-    // ================= BOOK MANAGEMENT (CRUD) =================
+    // BOOK MANAGEMENT (CRUD)
 
     public function bookIndex()
     {

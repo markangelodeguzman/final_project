@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\AdminController;
 
-// --- PUBLIC / PATRON ROUTES ---
+// PUBLIC / PATRON ROUTES 
 Route::get('/', [LibraryController::class, 'index'])->name('catalog');
 Route::post('/borrow', [LibraryController::class, 'storeRequest'])->name('borrow.request');
 
@@ -12,7 +12,7 @@ Route::post('/borrow', [LibraryController::class, 'storeRequest'])->name('borrow
 Route::get('/my-history', [LibraryController::class, 'patronHistory'])->name('patron.history');
 Route::post('/borrow/extend/{id}', [LibraryController::class, 'extendDueDate'])->name('borrow.extend');
 
-// --- LIBRARIAN ROUTES ---
+// LIBRARIAN ROUTES
 Route::get('/librarian', [LibraryController::class, 'adminDashboard'])->name('librarian.dashboard');
 
 // Borrowing Actions
@@ -28,7 +28,7 @@ Route::get('/books/{id}/edit', [LibraryController::class, 'editBook'])->name('bo
 Route::put('/books/{id}', [LibraryController::class, 'updateBook'])->name('books.update');
 Route::delete('/books/{id}', [LibraryController::class, 'destroyBook'])->name('books.destroy');
 
-// --- ADMINISTRATOR ROUTES ---
+// ADMINISTRATOR ROUTES
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 Route::post('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings');
 Route::post('/admin/patron', [AdminController::class, 'storePatron'])->name('admin.patron.store');
